@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+{% block title %}Tâche · DevDesk{% endblock %}
+{% block content %}
+<div class="page-head"><h1>{% if object %}Modifier la tâche{% else %}Nouvelle tâche{% endif %}</h1></div>
+<div class="panel form-panel">
+    <form method="post" novalidate>
+        {% csrf_token %}
+        {% include "includes/form.html" %}
+        <button class="btn btn-primary" type="submit">Enregistrer</button>
+        <a class="btn btn-outline-secondary" href="{% url 'tasks:list' %}">Annuler</a>
+    </form>
+</div>
+{% endblock %}

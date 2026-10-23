@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+{% block title %}{{ object.title }} · DevDesk{% endblock %}
+{% block content %}
+<div class="page-head">
+    <h1>{{ object.title }}</h1>
+    <div class="btn-group">
+        <a class="btn btn-primary" href="{% url 'documents:download' object.pk %}">Télécharger</a>
+        <a class="btn btn-outline-danger" href="{% url 'documents:delete' object.pk %}">Supprimer</a>
+    </div>
+</div>
+<div class="panel">
+    <p>Catégorie : {{ object.get_category_display }}</p>
+    <p>Projet : {% if object.project %}<a href="{{ object.project.get_absolute_url }}">{{ object.project }}</a>{% else %}—{% endif %}</p>
+    <p>Fichier : {{ object.original_name|default:object.file.name }}</p>
+</div>
+{% endblock %}

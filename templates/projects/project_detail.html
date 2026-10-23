@@ -1,0 +1,47 @@
+{% extends "base.html" %}
+{% block title %}{{ object.title }} · DevDesk{% endblock %}
+{% block content %}
+<div class="page-head">
+    <div>
+        <h1>{{ object.title }}</h1>
+        <p class="text-secondary">{{ object.get_category_display }} · {{ object.get_status_display }} · {{ object.get_priority_display }}</p>
+    </div>
+    <div class="btn-group">
+        <a class="btn btn-outline-light" href="{% url 'projects:update' object.pk %}">Modifier</a>
+        <a class="btn btn-outline-danger" href="{% url 'projects:delete' object.pk %}">Supprimer</a>
+    </div>
+</div>
+<div class="panel mb-4">
+    <p>{{ object.description|linebreaksbr|default:"Pas de description." }}</p>
+    <p><strong>Technologies :</strong> {{ object.technologies|default:"—" }}</p>
+    <p><strong>Échéance :</strong> {{ object.due_date|default:"—" }}</p>
+    <div class="progress"><div class="progress-bar" style="width: {{ object.progress }}%"></div></div>
+    <p class="small mt-2 mb-0">Progression {{ object.progress }}%</p>
+</div>
+<div class="row g-4">
+    <div class="col-lg-4">
+        <div class="panel">
+            <div class="d-flex justify-content-between mb-2"><h2 class="h5">Tâches</h2><a href="{% url 'tasks:create' %}?project={{ object.pk }}">Ajouter</a></div>
+            {% for task in project_tasks %}
+            <div class="item-row"><a href="{{ task.get_absolute_url }}">{{ task.title }}</a><span class="badge text-bg-secondary">{{ task.get_status_display }}</span></div>
+            {% empty %}<p class="text-secondary">Aucune tâche.</p>{% endfor %}
+        </div>
+    </div>
+    <div class="col-lg-4">
+        <div class="panel">
+            <div class="d-flex justify-content-between mb-2"><h2 class="h5">Notes</h2><a href="{% url 'notes:create' %}?project={{ object.pk }}">Ajouter</a></div>
+            {% for note in project_notes %}
+            <div class="item-row"><a href="{{ note.get_absolute_url }}">{{ note.title }}</a></div>
+            {% empty %}<p class="text-secondary">Aucune note.</p>{% endfor %}
+        </div>
+    </div>
+    <div class="col-lg-4">
+        <div class="panel">
+            <div class="d-flex justify-content-between mb-2"><h2 class="h5">Documents</h2><a href="{% url 'documents:create' %}?project={{ object.pk }}">Ajouter</a></div>
+            {% for doc in project_docs %}
+            <div class="item-row"><a href="{{ doc.get_absolute_url }}">{{ doc.title }}</a></div>
+            {% empty %}<p class="text-secondary">Aucun document.</p>{% endfor %}
+        </div>
+    </div>
+</div>
+{% endblock %}

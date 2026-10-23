@@ -1,0 +1,114 @@
+{% extends "base.html" %}
+{% block title %}Tableau de bord · DevDesk{% endblock %}
+{% block content %}
+<div class="page-head">
+    <div>
+        <h1>Tableau de bord</h1>
+        <p class="text-secondary">Vue d'ensemble de votre espace de travail.</p>
+    </div>
+    <a class="btn btn-primary" href="{% url 'projects:create' %}"><i class="bi bi-plus-lg"></i> Nouveau projet</a>
+</div>
+<div class="row g-3 stats-row">
+    <div class="col-6 col-xl-3"><div class="stat-card"><span>Projets</span><strong>{{ project_count }}</strong></div></div>
+    <div class="col-6 col-xl-3"><div class="stat-card"><span>À faire</span><strong>{{ task_counts.todo|default:0 }}</strong></div></div>
+    <div class="col-6 col-xl-3"><div class="stat-card warn"><span>En cours</span><strong>{{ task_counts.in_progress|default:0 }}</strong></div></div>
+    <div class="col-6 col-xl-3"><div class="stat-card ok"><span>Terminées</span><strong>{{ task_counts.done|default:0 }}</strong></div></div>
+    <div class="col-6 col-xl-3"><div class="stat-card danger"><span>Urgentes</span><strong>{{ task_counts.urgent|default:0 }}</strong></div></div>
+    <div class="col-6 col-xl-3"><div class="stat-card danger"><span>En retard</span><strong>{{ task_counts.overdue|default:0 }}</strong></div></div>
+    <div class="col-6 col-xl-3"><div class="stat-card"><span>Notes</span><strong>{{ notes_count }}</strong></div></div>
+    <div class="col-6 col-xl-3"><div class="stat-card"><span>Documents</span><strong>{{ docs_count }}</strong></div></div>
+</div>
+<div class="row g-4 mt-1">
+    <div class="col-lg-6">
+        <div class="panel">
+            <h2 class="h5">Répartition des tâches</h2>
+            <canvas id="tasksChart" height="180"></canvas>
+        </div>
+    </div>
+    <div class="col-lg-6">
+        <div class="panel">
+            <h2 class="h5">Progression des projets</h2>
+            {% for project in active_projects %}
+            <div class="mb-3">
+                <div class="d-flex justify-content-between"><a href="{{ project.get_absolute_url }}">{{ project.title }}</a><span>{{ project.progress }}%</span></div>
+                <div class="progress"><div class="progress-bar" style="width: {{ project.progress }}%"></div></div>
+            </div>
+            {% empty %}
+            <p class="text-secondary mb-0">Aucun projet pour le moment.</p>
+            {% endfor %}
+        </div>
+    </div>
+    <div class="col-lg-6">
+        <div class="panel">
+            <h2 class="h5">Tâches en retard</h2>
+            <ul class="list-unstyled mb-0">
+                {% for task in overdue_tasks %}
+                <li class="item-row"><a href="{{ task.get_absolute_url }}">{{ task.title }}</a><span class="badge text-bg-danger">{{ task.due_date }}</span></li>
+                {% empty %}
+                <li class="text-secondary">Rien en retard.</li>
+                {% endfor %}
+            </ul>
+        </div>
+    </div>
+    <div class="col-lg-6">
+        <div class="panel">
+            <h2 class="h5">Prochaines échéances</h2>
+            <ul class="list-unstyled mb-0">
+                {% for task in upcoming_tasks %}
+                <li class="item-row"><a href="{{ task.get_absolute_url }}">{{ task.title }}</a><span class="badge text-bg-info">{{ task.due_date }}</span></li>
+                {% empty %}
+                <li class="text-secondary">Aucune échéance cette semaine.</li>
+                {% endfor %}
+            </ul>
+            {% if upcoming_projects %}
+            <hr>
+            <h3 class="h6">Projets</h3>
+            {% for project in upcoming_projects %}
+            <div class="item-row"><a href="{{ project.get_absolute_url }}">{{ project.title }}</a><span>{{ project.due_date }}</span></div>
+            {% endfor %}
+            {% endif %}
+        </div>
+    </div>
+    <div class="col-lg-6">
+        <div class="panel">
+            <h2 class="h5">Notes récentes</h2>
+            {% for note in recent_notes %}
+            <div class="item-row"><a href="{{ note.get_absolute_url }}">{{ note.title }}</a><span class="badge text-bg-secondary">{{ note.get_category_display }}</span></div>
+            {% empty %}
+            <p class="text-secondary mb-0">Pas encore de notes.</p>
+            {% endfor %}
+        </div>
+    </div>
+    <div class="col-lg-6">
+        <div class="panel">
+            <h2 class="h5">Apprentissages</h2>
+            {% for goal in goals %}
+            <div class="mb-2">
+                <div class="d-flex justify-content-between"><a href="{{ goal.get_absolute_url }}">{{ goal.title }}</a><span>{{ goal.progress }}%</span></div>
+                <div class="progress"><div class="progress-bar bg-info" style="width: {{ goal.progress }}%"></div></div>
+            </div>
+            {% empty %}
+            <p class="text-secondary">Aucun objectif en cours.</p>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+{% endblock %}
+{% block extra_js %}
+<script>
+const ctx = document.getElementById('tasksChart');
+if (ctx) {
+  new Chart(ctx, {
+    type: 'doughnut',
+    data: {
+      labels: ['À faire', 'En cours', 'En attente', 'Terminées'],
+      datasets: [{
+        data: {{ chart_tasks|safe }},
+        backgroundColor: ['#5b8def', '#7dd3fc', '#fbbf24', '#34d399']
+      }]
+    },
+    options: { plugins: { legend: { labels: { color: getComputedStyle(document.body).getPropertyValue('--text') } } } }
+  });
+}
+</script>
+{% endblock %}

@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+{% block title %}Tâches · DevDesk{% endblock %}
+{% block content %}
+<div class="page-head">
+    <h1>Tâches</h1>
+    <div class="btn-group">
+        <a class="btn btn-outline-light" href="{% url 'tasks:kanban' %}">Kanban</a>
+        <a class="btn btn-primary" href="{% url 'tasks:create' %}">Nouvelle tâche</a>
+    </div>
+</div>
+<form class="filter-bar" method="get">
+    {{ filter_form.q }}
+    {{ filter_form.status }}
+    {{ filter_form.priority }}
+    {{ filter_form.project }}
+    {{ filter_form.sort }}
+    <button class="btn btn-outline-secondary" type="submit">Filtrer</button>
+</form>
+<div class="panel p-0 table-wrap">
+<table class="table table-hover mb-0">
+    <thead><tr><th>Titre</th><th>Projet</th><th>Priorité</th><th>Statut</th><th>Échéance</th></tr></thead>
+    <tbody>
+    {% for task in tasks %}
+    <tr>
+        <td><a href="{{ task.get_absolute_url }}">{{ task.title }}</a></td>
+        <td>{{ task.project|default:"—" }}</td>
+        <td><span class="prio prio-{{ task.priority }}">{{ task.get_priority_display }}</span></td>
+        <td>{{ task.get_status_display }}</td>
+        <td>{% if task.is_overdue %}<span class="text-danger">{{ task.due_date }} (retard)</span>{% else %}{{ task.due_date|default:"—" }}{% endif %}</td>
+    </tr>
+    {% empty %}
+    <tr><td colspan="5" class="text-secondary">Aucune tâche.</td></tr>
+    {% endfor %}
+    </tbody>
+</table>
+</div>
+{% include "includes/pagination.html" %}
+{% endblock %}

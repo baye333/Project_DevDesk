@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+{% load calendar_extras %}
+{% block title %}Semaine · DevDesk{% endblock %}
+{% block content %}
+<div class="page-head">
+    <h1>Vue hebdomadaire</h1>
+    <div class="btn-group">
+        <a class="btn btn-outline-light" href="?start={{ prev_start }}">Semaine précédente</a>
+        <a class="btn btn-outline-light" href="{% url 'calendar_app:month' %}">Mois</a>
+        <a class="btn btn-outline-light" href="?start={{ next_start }}">Semaine suivante</a>
+        <a class="btn btn-primary" href="{% url 'calendar_app:create' %}">Événement</a>
+    </div>
+</div>
+<div class="row g-3">
+    {% for day in days %}
+    {% with items=by_day|day_items:day %}
+    <div class="col-12 col-lg">
+        <div class="panel h-100 {% if day == today %}today-panel{% endif %}">
+            <h2 class="h6">{{ day|date:"D d/m" }}</h2>
+            {% for event in items.events %}<a class="cal-chip event d-block mb-1" href="{{ event.get_absolute_url }}">{{ event.title }}</a>{% endfor %}
+            {% for task in items.tasks %}<a class="cal-chip task d-block mb-1" href="{{ task.get_absolute_url }}">{{ task.title }}</a>{% endfor %}
+            {% for project in items.projects %}<a class="cal-chip project d-block mb-1" href="{{ project.get_absolute_url }}">{{ project.title }}</a>{% endfor %}
+        </div>
+    </div>
+    {% endwith %}
+    {% endfor %}
+</div>
+{% endblock %}

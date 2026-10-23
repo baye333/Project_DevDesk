@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+{% block title %}Objectifs · DevDesk{% endblock %}
+{% block content %}
+<div class="page-head"><h1>Objectifs</h1><a class="btn btn-primary" href="{% url 'learning:goal_create' %}">Nouvel objectif</a></div>
+{% for goal in goals %}
+<div class="panel mb-3">
+    <div class="d-flex justify-content-between">
+        <a href="{{ goal.get_absolute_url }}"><strong>{{ goal.title }}</strong></a>
+        <span>{{ goal.get_status_display }} · {{ goal.progress }}%</span>
+    </div>
+    <div class="progress mt-2"><div class="progress-bar" style="width: {{ goal.progress }}%"></div></div>
+</div>
+{% empty %}<p class="text-secondary">Aucun objectif.</p>{% endfor %}
+{% endblock %}

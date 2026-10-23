@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+{% block title %}{{ object.title }} · DevDesk{% endblock %}
+{% block content %}
+<div class="page-head">
+    <div>
+        <h1>{{ object.title }} {% if object.is_favorite %}<i class="bi bi-star-fill text-warning"></i>{% endif %}</h1>
+        <p class="text-secondary">{{ object.get_category_display }}{% if object.project %} · {{ object.project }}{% endif %}</p>
+    </div>
+    <div class="btn-group">
+        <a class="btn btn-outline-light" href="{% url 'notes:update' object.pk %}">Modifier</a>
+        <a class="btn btn-outline-danger" href="{% url 'notes:delete' object.pk %}">Supprimer</a>
+    </div>
+</div>
+<div class="panel">
+    {% if object.tag_list %}<p>{% for tag in object.tag_list %}<span class="badge text-bg-secondary me-1">{{ tag }}</span>{% endfor %}</p>{% endif %}
+    <pre class="code-block">{{ object.content }}</pre>
+</div>
+{% endblock %}

@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+{% block title %}Projets · DevDesk{% endblock %}
+{% block content %}
+<div class="page-head">
+    <h1>Projets</h1>
+    <a class="btn btn-primary" href="{% url 'projects:create' %}"><i class="bi bi-plus-lg"></i> Nouveau projet</a>
+</div>
+<form class="filter-bar" method="get">
+    <input class="form-control" name="q" value="{{ request.GET.q }}" placeholder="Rechercher">
+    <select class="form-select" name="status" onchange="this.form.submit()">
+        <option value="">Tous les statuts</option>
+        <option value="planning" {% if request.GET.status == 'planning' %}selected{% endif %}>Planifié</option>
+        <option value="active" {% if request.GET.status == 'active' %}selected{% endif %}>Actif</option>
+        <option value="paused" {% if request.GET.status == 'paused' %}selected{% endif %}>En pause</option>
+        <option value="completed" {% if request.GET.status == 'completed' %}selected{% endif %}>Terminé</option>
+        <option value="archived" {% if request.GET.status == 'archived' %}selected{% endif %}>Archivé</option>
+    </select>
+    <button class="btn btn-outline-secondary" type="submit">Filtrer</button>
+</form>
+<div class="row g-3">
+    {% for project in projects %}
+    <div class="col-md-6 col-xl-4">
+        <a class="card-link" href="{{ project.get_absolute_url }}">
+            <article class="panel h-100">
+                <div class="d-flex justify-content-between">
+                    <h2 class="h5">{{ project.title }}</h2>
+                    <span class="badge text-bg-secondary">{{ project.get_status_display }}</span>
+                </div>
+                <p class="text-secondary small">{{ project.get_category_display }} · {{ project.get_priority_display }}</p>
+                <div class="progress mb-2"><div class="progress-bar" style="width: {{ project.progress }}%"></div></div>
+                <p class="mb-0 small">{{ project.progress }}% · {{ project.due_date|default:"Sans échéance" }}</p>
+            </article>
+        </a>
+    </div>
+    {% empty %}
+    <p class="text-secondary">Aucun projet. Créez-en un pour commencer.</p>
+    {% endfor %}
+</div>
+{% include "includes/pagination.html" %}
+{% endblock %}

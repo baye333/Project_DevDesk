@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+{% block title %}{{ object.title }} · DevDesk{% endblock %}
+{% block content %}
+<div class="page-head">
+    <h1>{{ object.title }}</h1>
+    <div class="btn-group">
+        <a class="btn btn-outline-light" href="{% url 'learning:goal_update' object.pk %}">Modifier</a>
+        <a class="btn btn-outline-danger" href="{% url 'learning:goal_delete' object.pk %}">Supprimer</a>
+    </div>
+</div>
+<div class="panel">
+    <p>{{ object.description|linebreaksbr|default:"—" }}</p>
+    <p>Compétence : {{ object.skill|default:"—" }} · Échéance : {{ object.deadline|default:"—" }}</p>
+    <div class="progress"><div class="progress-bar" style="width: {{ object.progress }}%"></div></div>
+</div>
+{% endblock %}

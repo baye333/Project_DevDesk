@@ -1,0 +1,9 @@
+{% extends "base.html" %}
+{% block title %}Page introuvable{% endblock %}
+{% block content %}
+<div class="panel form-panel text-center">
+    <h1>404</h1>
+    <p>La page demandée n'existe pas.</p>
+    <a class="btn btn-primary" href="{% url 'dashboard:home' %}">Retour au tableau de bord</a>
+</div>
+{% endblock %}

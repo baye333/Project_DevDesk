@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+{% load static %}
+{% block title %}Kanban · DevDesk{% endblock %}
+{% block content %}
+<div class="page-head">
+    <h1>Kanban</h1>
+    <div class="btn-group">
+        <a class="btn btn-outline-light" href="{% url 'tasks:list' %}">Liste</a>
+        <a class="btn btn-primary" href="{% url 'tasks:create' %}">Nouvelle tâche</a>
+    </div>
+</div>
+<div class="kanban" data-csrf="{{ csrf_token }}">
+    {% for key, label, items in columns %}
+    <section class="kanban-col" data-status="{{ key }}">
+        <h2>{{ label }}</h2>
+        <div class="kanban-drop">
+            {% for task in items %}
+            <article class="kanban-card" draggable="true" data-id="{{ task.pk }}">
+                <a href="{{ task.get_absolute_url }}">{{ task.title }}</a>
+                <div class="small text-secondary">{{ task.project|default:"" }}</div>
+                <span class="prio prio-{{ task.priority }}">{{ task.get_priority_display }}</span>
+            </article>
+            {% endfor %}
+        </div>
+    </section>
+    {% endfor %}
+</div>
+{% endblock %}
+{% block extra_js %}
+<script src="{% static 'js/kanban.js' %}"></script>
+{% endblock %}

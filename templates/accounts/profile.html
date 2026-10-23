@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+{% block title %}Profil · DevDesk{% endblock %}
+{% block content %}
+<div class="page-head">
+    <div>
+        <h1>Profil</h1>
+        <p class="text-secondary">Gérez vos informations et vos préférences.</p>
+    </div>
+    <a class="btn btn-primary" href="{% url 'accounts:profile_edit' %}">Modifier le profil</a>
+</div>
+<div class="row g-4">
+    <div class="col-lg-4">
+        <div class="panel text-center">
+            {% if profile.avatar %}
+            <img src="{% url 'accounts:avatar' %}" alt="Avatar" class="profile-avatar mb-3">
+            {% else %}
+            <div class="profile-avatar fallback mb-3">{{ request.user.username|slice:":1"|upper }}</div>
+            {% endif %}
+            <h2 class="h4">{{ profile.display_name|default:request.user.username }}</h2>
+            <p class="text-secondary">{{ profile.job_title|default:"Membre DevDesk" }}</p>
+            <span class="badge text-bg-secondary">Thème {{ profile.get_theme_display }}</span>
+        </div>
+    </div>
+    <div class="col-lg-8">
+        <div class="panel">
+            <dl class="row mb-0">
+                <dt class="col-sm-3">Identifiant</dt><dd class="col-sm-9">{{ request.user.username }}</dd>
+                <dt class="col-sm-3">E-mail</dt><dd class="col-sm-9">{{ request.user.email|default:"—" }}</dd>
+                <dt class="col-sm-3">Nom</dt><dd class="col-sm-9">{{ request.user.get_full_name|default:"—" }}</dd>
+                <dt class="col-sm-3">Site</dt><dd class="col-sm-9">{% if profile.website %}<a href="{{ profile.website }}">{{ profile.website }}</a>{% else %}—{% endif %}</dd>
+                <dt class="col-sm-3">Bio</dt><dd class="col-sm-9">{{ profile.bio|default:"—"|linebreaksbr }}</dd>
+            </dl>
+            <hr>
+            <a class="btn btn-outline-light" href="{% url 'accounts:password_change' %}">Changer le mot de passe</a>
+        </div>
+    </div>
+</div>
+{% endblock %}

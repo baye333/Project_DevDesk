@@ -1,0 +1,12 @@
+<aside class="app-sidebar d-none d-lg-flex">
+    {% include "includes/nav.html" %}
+</aside>
+<div class="offcanvas offcanvas-start sidebar-offcanvas d-lg-none" tabindex="-1" id="sidebarMenu">
+    <div class="offcanvas-header">
+        <h5 class="offcanvas-title brand">DevDesk</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="offcanvas"></button>
+    </div>
+    <div class="offcanvas-body p-0">
+        {% include "includes/nav.html" %}
+    </div>
+</div>

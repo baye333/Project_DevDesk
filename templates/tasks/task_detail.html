@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+{% block title %}{{ object.title }} · DevDesk{% endblock %}
+{% block content %}
+<div class="page-head">
+    <h1>{{ object.title }}</h1>
+    <div class="btn-group">
+        <a class="btn btn-outline-light" href="{% url 'tasks:update' object.pk %}">Modifier</a>
+        <a class="btn btn-outline-danger" href="{% url 'tasks:delete' object.pk %}">Supprimer</a>
+    </div>
+</div>
+<div class="panel">
+    <p>{{ object.description|linebreaksbr|default:"Pas de description." }}</p>
+    <ul class="meta">
+        <li>Statut : {{ object.get_status_display }}</li>
+        <li>Priorité : {{ object.get_priority_display }}</li>
+        <li>Projet : {% if object.project %}<a href="{{ object.project.get_absolute_url }}">{{ object.project }}</a>{% else %}—{% endif %}</li>
+        <li>Échéance : {% if object.is_overdue %}<span class="text-danger">{{ object.due_date }} (en retard)</span>{% else %}{{ object.due_date|default:"—" }}{% endif %}</li>
+    </ul>
+</div>
+{% endblock %}

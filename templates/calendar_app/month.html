@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+{% load calendar_extras %}
+{% block title %}Calendrier · DevDesk{% endblock %}
+{% block content %}
+<div class="page-head">
+    <h1>{{ month_name }} {{ year }}</h1>
+    <div class="btn-group">
+        <a class="btn btn-outline-light" href="?year={{ prev_year }}&month={{ prev_month }}">Mois précédent</a>
+        <a class="btn btn-outline-light" href="{% url 'calendar_app:week' %}">Semaine</a>
+        <a class="btn btn-outline-light" href="?year={{ next_year }}&month={{ next_month }}">Mois suivant</a>
+        <a class="btn btn-primary" href="{% url 'calendar_app:create' %}">Événement</a>
+    </div>
+</div>
+<div class="calendar-grid">
+    <div class="cal-head">Lun</div><div class="cal-head">Mar</div><div class="cal-head">Mer</div>
+    <div class="cal-head">Jeu</div><div class="cal-head">Ven</div><div class="cal-head">Sam</div><div class="cal-head">Dim</div>
+    {% for week in weeks %}
+        {% for day in week %}
+        {% with items=by_day|day_items:day %}
+        <div class="cal-cell {% if day == today %}today{% endif %} {% if day.month != month %}muted{% endif %}">
+            <div class="cal-num">{{ day.day }}</div>
+            {% for event in items.events %}<a class="cal-chip event" href="{{ event.get_absolute_url }}">{{ event.title }}</a>{% endfor %}
+            {% for task in items.tasks %}<a class="cal-chip task" href="{{ task.get_absolute_url }}">{{ task.title }}</a>{% endfor %}
+            {% for project in items.projects %}<a class="cal-chip project" href="{{ project.get_absolute_url }}">{{ project.title }}</a>{% endfor %}
+        </div>
+        {% endwith %}
+        {% endfor %}
+    {% endfor %}
+</div>
+{% endblock %}

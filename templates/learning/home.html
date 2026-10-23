@@ -1,0 +1,64 @@
+{% extends "base.html" %}
+{% block title %}Apprentissages · DevDesk{% endblock %}
+{% block content %}
+<div class="page-head">
+    <h1>Apprentissages</h1>
+    <div class="btn-group">
+        <a class="btn btn-outline-light" href="{% url 'learning:skill_create' %}">Compétence</a>
+        <a class="btn btn-outline-light" href="{% url 'learning:goal_create' %}">Objectif</a>
+        <a class="btn btn-outline-light" href="{% url 'learning:session_create' %}">Session</a>
+        <a class="btn btn-primary" href="{% url 'learning:resource_create' %}">Ressource</a>
+    </div>
+</div>
+<div class="row g-4">
+    <div class="col-lg-6">
+        <div class="panel">
+            <h2 class="h5">Compétences</h2>
+            {% for skill in skills %}
+            <div class="mb-3">
+                <div class="d-flex justify-content-between">
+                    <strong>{{ skill.name }}</strong>
+                    <span>{{ skill.get_level_display }} · {{ skill.progress }}%</span>
+                </div>
+                <div class="progress mb-1"><div class="progress-bar" style="width: {{ skill.progress }}%"></div></div>
+                <a class="small" href="{% url 'learning:skill_update' skill.pk %}">Modifier</a>
+                · <a class="small text-danger" href="{% url 'learning:skill_delete' skill.pk %}">Supprimer</a>
+            </div>
+            {% empty %}<p class="text-secondary">Aucune compétence.</p>{% endfor %}
+        </div>
+    </div>
+    <div class="col-lg-6">
+        <div class="panel">
+            <div class="d-flex justify-content-between"><h2 class="h5">Objectifs</h2><a href="{% url 'learning:goal_list' %}">Tous</a></div>
+            {% for goal in goals %}
+            <div class="mb-3">
+                <div class="d-flex justify-content-between"><a href="{{ goal.get_absolute_url }}">{{ goal.title }}</a><span>{{ goal.progress }}%</span></div>
+                <div class="progress"><div class="progress-bar bg-info" style="width: {{ goal.progress }}%"></div></div>
+            </div>
+            {% empty %}<p class="text-secondary">Aucun objectif.</p>{% endfor %}
+        </div>
+    </div>
+    <div class="col-lg-6">
+        <div class="panel">
+            <h2 class="h5">Sessions récentes</h2>
+            {% for session in sessions %}
+            <div class="item-row">
+                <span>{{ session.title }} · {{ session.duration_minutes }} min</span>
+                <a class="text-danger small" href="{% url 'learning:session_delete' session.pk %}">Suppr.</a>
+            </div>
+            {% empty %}<p class="text-secondary">Aucune session.</p>{% endfor %}
+        </div>
+    </div>
+    <div class="col-lg-6">
+        <div class="panel">
+            <h2 class="h5">Ressources</h2>
+            {% for resource in resources %}
+            <div class="item-row">
+                <a href="{{ resource.url }}" target="_blank" rel="noopener">{{ resource.title }}</a>
+                <a class="text-danger small" href="{% url 'learning:resource_delete' resource.pk %}">Suppr.</a>
+            </div>
+            {% empty %}<p class="text-secondary">Aucune ressource.</p>{% endfor %}
+        </div>
+    </div>
+</div>
+{% endblock %}

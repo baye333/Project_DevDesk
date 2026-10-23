@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+{% block title %}Téléverser · DevDesk{% endblock %}
+{% block content %}
+<div class="page-head"><h1>Téléverser un document</h1></div>
+<div class="panel form-panel">
+    <p class="text-secondary">PDF, DOCX, XLSX, PPTX et images. 10 Mo maximum.</p>
+    <form method="post" enctype="multipart/form-data">{% csrf_token %}{% include "includes/form.html" %}
+        <button class="btn btn-primary" type="submit">Envoyer</button>
+        <a class="btn btn-outline-secondary" href="{% url 'documents:list' %}">Annuler</a>
+    </form>
+</div>
+{% endblock %}

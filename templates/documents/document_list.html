@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+{% block title %}Documents · DevDesk{% endblock %}
+{% block content %}
+<div class="page-head">
+    <h1>Documents</h1>
+    <a class="btn btn-primary" href="{% url 'documents:create' %}">Téléverser</a>
+</div>
+<form class="filter-bar" method="get">
+    <input class="form-control" name="q" value="{{ request.GET.q }}" placeholder="Rechercher">
+    <select class="form-select" name="category">
+        <option value="">Toutes les catégories</option>
+        <option value="specs">Spécifications</option>
+        <option value="course">Cours</option>
+        <option value="report">Rapport</option>
+        <option value="invoice">Facture</option>
+        <option value="image">Image</option>
+        <option value="other">Autre</option>
+    </select>
+    <button class="btn btn-outline-secondary" type="submit">Filtrer</button>
+</form>
+<div class="panel p-0 table-wrap">
+<table class="table mb-0">
+    <thead><tr><th>Titre</th><th>Catégorie</th><th>Projet</th><th>Date</th></tr></thead>
+    <tbody>
+    {% for doc in documents %}
+    <tr>
+        <td><a href="{{ doc.get_absolute_url }}">{{ doc.title }}</a></td>
+        <td>{{ doc.get_category_display }}</td>
+        <td>{{ doc.project|default:"—" }}</td>
+        <td>{{ doc.created_at|date:"d/m/Y" }}</td>
+    </tr>
+    {% empty %}
+    <tr><td colspan="4" class="text-secondary">Aucun document.</td></tr>
+    {% endfor %}
+    </tbody>
+</table>
+</div>
+{% include "includes/pagination.html" %}
+{% endblock %}

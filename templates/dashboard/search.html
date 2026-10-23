@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+{% block title %}Recherche · DevDesk{% endblock %}
+{% block content %}
+<div class="page-head"><h1>Recherche</h1></div>
+<form class="panel mb-4" method="get">
+    <div class="input-group">
+        <input class="form-control" type="search" name="q" value="{{ q }}" placeholder="Mot-clé">
+        <button class="btn btn-primary" type="submit">Rechercher</button>
+    </div>
+</form>
+{% if q %}
+<div class="row g-4">
+    {% for label, items in results.items %}
+    <div class="col-md-6">
+        <div class="panel">
+            <h2 class="h5 text-capitalize">{{ label }}</h2>
+            {% for item in items %}
+            <div class="item-row"><a href="{{ item.get_absolute_url }}">{{ item.title }}</a></div>
+            {% empty %}
+            <p class="text-secondary mb-0">Aucun résultat.</p>
+            {% endfor %}
+        </div>
+    </div>
+    {% endfor %}
+</div>
+{% endif %}
+{% endblock %}

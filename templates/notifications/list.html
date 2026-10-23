@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+{% block title %}Notifications · DevDesk{% endblock %}
+{% block content %}
+<div class="page-head">
+    <h1>Notifications</h1>
+    <form method="post" action="{% url 'notifications:read_all' %}">{% csrf_token %}
+        <button class="btn btn-outline-light" type="submit">Tout marquer comme lu</button>
+    </form>
+</div>
+{% for notif in notifications %}
+<div class="panel mb-2 {% if not notif.is_read %}unread{% endif %}">
+    <div class="d-flex justify-content-between align-items-start">
+        <div>
+            <strong>{{ notif.title }}</strong>
+            <p class="mb-1">{{ notif.message }}</p>
+            <span class="small text-secondary">{{ notif.created_at }}</span>
+        </div>
+        {% if not notif.is_read %}
+        <form method="post" action="{% url 'notifications:read' notif.pk %}">{% csrf_token %}
+            <button class="btn btn-sm btn-primary" type="submit">Ouvrir</button>
+        </form>
+        {% elif notif.link %}
+        <a class="btn btn-sm btn-outline-light" href="{{ notif.link }}">Voir</a>
+        {% endif %}
+    </div>
+</div>
+{% empty %}
+<p class="text-secondary">Aucune notification.</p>
+{% endfor %}
+{% include "includes/pagination.html" %}
+{% endblock %}

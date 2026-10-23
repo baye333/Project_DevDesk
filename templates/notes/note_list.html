@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+{% block title %}Notes · DevDesk{% endblock %}
+{% block content %}
+<div class="page-head">
+    <h1>Notes techniques</h1>
+    <a class="btn btn-primary" href="{% url 'notes:create' %}">Nouvelle note</a>
+</div>
+<form class="filter-bar" method="get">
+    <input class="form-control" name="q" value="{{ request.GET.q }}" placeholder="Rechercher">
+    <select class="form-select" name="category">
+        <option value="">Toutes les catégories</option>
+        {% for value, label in categories %}
+        <option value="{{ value }}" {% if request.GET.category == value %}selected{% endif %}>{{ label }}</option>
+        {% endfor %}
+    </select>
+    <select class="form-select" name="favorite">
+        <option value="">Toutes</option>
+        <option value="1" {% if request.GET.favorite == '1' %}selected{% endif %}>Favoris</option>
+    </select>
+    <button class="btn btn-outline-secondary" type="submit">Filtrer</button>
+</form>
+<div class="row g-3">
+    {% for note in notes %}
+    <div class="col-md-6 col-xl-4">
+        <a class="card-link" href="{{ note.get_absolute_url }}">
+            <article class="panel h-100">
+                <div class="d-flex justify-content-between">
+                    <h2 class="h5">{{ note.title }}</h2>
+                    {% if note.is_favorite %}<i class="bi bi-star-fill text-warning"></i>{% endif %}
+                </div>
+                <p class="small text-secondary">{{ note.get_category_display }}</p>
+                <p class="mb-0">{{ note.content|truncatechars:120 }}</p>
+            </article>
+        </a>
+    </div>
+    {% empty %}
+    <p class="text-secondary">Aucune note.</p>
+    {% endfor %}
+</div>
+{% include "includes/pagination.html" %}
+{% endblock %}

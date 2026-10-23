@@ -1,0 +1,21 @@
+<div class="sidebar-inner">
+    <a class="brand" href="{% url 'dashboard:home' %}">
+        <i class="bi bi-grid-1x2-fill"></i>
+        <span>DevDesk</span>
+    </a>
+    <nav class="side-nav">
+        <a href="{% url 'dashboard:home' %}" class="{% if request.resolver_match and request.resolver_match.app_name == 'dashboard' %}active{% endif %}"><i class="bi bi-speedometer2"></i> Tableau de bord</a>
+        <a href="{% url 'projects:list' %}" class="{% if request.resolver_match and request.resolver_match.app_name == 'projects' %}active{% endif %}"><i class="bi bi-folder2-open"></i> Projets</a>
+        <a href="{% url 'tasks:list' %}" class="{% if request.resolver_match and request.resolver_match.app_name == 'tasks' %}active{% endif %}"><i class="bi bi-check2-square"></i> Tâches</a>
+        <a href="{% url 'notes:list' %}" class="{% if request.resolver_match and request.resolver_match.app_name == 'notes' %}active{% endif %}"><i class="bi bi-journal-code"></i> Notes</a>
+        <a href="{% url 'learning:home' %}" class="{% if request.resolver_match and request.resolver_match.app_name == 'learning' %}active{% endif %}"><i class="bi bi-mortarboard"></i> Apprentissages</a>
+        <a href="{% url 'documents:list' %}" class="{% if request.resolver_match and request.resolver_match.app_name == 'documents' %}active{% endif %}"><i class="bi bi-file-earmark-arrow-up"></i> Documents</a>
+        <a href="{% url 'calendar_app:month' %}" class="{% if request.resolver_match and request.resolver_match.app_name == 'calendar_app' %}active{% endif %}"><i class="bi bi-calendar3"></i> Calendrier</a>
+        <a href="{% url 'notifications:list' %}" class="{% if request.resolver_match and request.resolver_match.app_name == 'notifications' %}active{% endif %}"><i class="bi bi-bell"></i> Notifications</a>
+        <a href="{% url 'accounts:profile' %}" class="{% if request.resolver_match and request.resolver_match.url_name == 'profile' %}active{% endif %}"><i class="bi bi-person-gear"></i> Paramètres</a>
+    </nav>
+    <form method="post" action="{% url 'accounts:logout' %}" class="mt-auto px-3 pb-4">
+        {% csrf_token %}
+        <button class="btn btn-outline-light w-100" type="submit"><i class="bi bi-box-arrow-left"></i> Déconnexion</button>
+    </form>
+</div>

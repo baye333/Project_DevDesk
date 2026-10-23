@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+{% block title %}{{ object.title }} · DevDesk{% endblock %}
+{% block content %}
+<div class="page-head">
+    <h1>{{ object.title }}</h1>
+    <div class="btn-group">
+        <a class="btn btn-outline-light" href="{% url 'calendar_app:update' object.pk %}">Modifier</a>
+        <a class="btn btn-outline-danger" href="{% url 'calendar_app:delete' object.pk %}">Supprimer</a>
+    </div>
+</div>
+<div class="panel">
+    <p>{{ object.description|linebreaksbr|default:"—" }}</p>
+    <p>Début : {{ object.start }}</p>
+    <p>Fin : {{ object.end }}</p>
+    {% if object.all_day %}<p>Journée entière</p>{% endif %}
+</div>
+{% endblock %}
